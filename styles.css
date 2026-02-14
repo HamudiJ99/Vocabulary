@@ -622,6 +622,28 @@ header .subtitle {
   transform: translateY(-1px);
 }
 
+.reverse-mode-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--accent);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.reverse-mode-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.reverse-mode-btn.active {
+  background: var(--gold);
+  color: var(--primary);
+  border-color: var(--gold);
+}
+
 /* Stars Display */
 .flashcard-stars-display {
   margin-left: 10px;
@@ -1178,9 +1200,14 @@ header .subtitle {
     order: 1;
   }
 
-  .overview-btn {
+  .reverse-mode-btn {
     width: 100%;
     order: 2;
+  }
+
+  .overview-btn {
+    width: 100%;
+    order: 3;
   }
 
   /* Overview Mobile */

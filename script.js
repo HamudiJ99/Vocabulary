@@ -13,6 +13,7 @@ let flashcardState = {
   starFilter: "all",
   hideKnown: false,
   showOverview: false,
+  reverseMode: false,
 };
 let currentWord = null;
 
@@ -452,12 +453,9 @@ function startFlashcards(category = null) {
   flashcardState.selectedCategory = selectedCategory;
 
   const words = getFilteredWords(selectedCategory);
-  const maxCards = Math.min(words.length, 20);
 
   flashcardState.current = 0;
-  flashcardState.cards = words
-    .sort(() => Math.random() - 0.5)
-    .slice(0, maxCards);
+  flashcardState.cards = words.sort(() => Math.random() - 0.5);
 
   document.getElementById("flashcardTotal").textContent =
     flashcardState.cards.length;
@@ -510,8 +508,8 @@ function onCategoryChange() {
 
 function showFlashcard() {
   if (flashcardState.cards.length === 0) {
-    document.getElementById("flashcardArabic").textContent = "Keine Wörter";
-    document.getElementById("flashcardEnglish").textContent =
+    document.getElementById("flashcardFrontText").textContent = "Keine Wörter";
+    document.getElementById("flashcardBackText").textContent =
       "No words available";
     const starsEl = document.getElementById("flashcardStars");
     if (starsEl) starsEl.textContent = "";
@@ -523,8 +521,29 @@ function showFlashcard() {
 
   document.getElementById("flashcardCurrent").textContent =
     flashcardState.current + 1;
-  document.getElementById("flashcardArabic").textContent = card.ar;
-  document.getElementById("flashcardEnglish").textContent = card.en;
+
+  // Update card content based on reverse mode
+  const frontText = document.getElementById("flashcardFrontText");
+  const backText = document.getElementById("flashcardBackText");
+  const frontLabel = document.getElementById("flashcardFrontLabel");
+  const backLabel = document.getElementById("flashcardBackLabel");
+
+  if (flashcardState.reverseMode) {
+    frontText.textContent = card.en;
+    frontText.className = "flashcard-text";
+    backText.textContent = card.ar;
+    backText.className = "flashcard-arabic";
+    if (frontLabel) frontLabel.textContent = "Englisch";
+    if (backLabel) backLabel.textContent = "Arabisch";
+  } else {
+    frontText.textContent = card.ar;
+    frontText.className = "flashcard-arabic";
+    backText.textContent = card.en;
+    backText.className = "flashcard-text";
+    if (frontLabel) frontLabel.textContent = "Arabisch";
+    if (backLabel) backLabel.textContent = "Englisch";
+  }
+
   document.getElementById("flashcard").classList.remove("flipped");
 
   // Update stars display
@@ -532,6 +551,16 @@ function showFlashcard() {
   if (starsEl) {
     starsEl.textContent = renderStars(stars);
   }
+}
+
+function toggleReverseMode() {
+  flashcardState.reverseMode = !flashcardState.reverseMode;
+  const btn = document.getElementById("reverseModeBtn");
+  if (btn) {
+    btn.textContent = flashcardState.reverseMode ? "🔄 AR → EN" : "🔄 EN → AR";
+    btn.classList.toggle("active", flashcardState.reverseMode);
+  }
+  showFlashcard();
 }
 
 function flipCard() {

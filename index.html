@@ -138,6 +138,13 @@
             <span>Bekannte Wörter ausblenden (3⭐)</span>
           </label>
           <button
+            class="reverse-mode-btn"
+            id="reverseModeBtn"
+            onclick="toggleReverseMode()"
+          >
+            🔄 EN → AR
+          </button>
+          <button
             class="overview-btn"
             id="overviewBtn"
             onclick="toggleOverview()"
@@ -157,13 +164,23 @@
         </p>
         <div class="flashcard" id="flashcard" onclick="flipCard()">
           <div class="flashcard-front">
-            <p style="opacity: 0.6; margin-bottom: 10px">Arabisch</p>
-            <div class="flashcard-arabic" id="flashcardArabic">مرحباً</div>
+            <p
+              id="flashcardFrontLabel"
+              style="opacity: 0.6; margin-bottom: 10px"
+            >
+              Arabisch
+            </p>
+            <div class="flashcard-arabic" id="flashcardFrontText">مرحباً</div>
             <p style="opacity: 0.5; margin-top: 20px">Klicken zum Umdrehen</p>
           </div>
           <div class="flashcard-back">
-            <p style="opacity: 0.8; margin-bottom: 10px">Englisch</p>
-            <div class="flashcard-text" id="flashcardEnglish">hello</div>
+            <p
+              id="flashcardBackLabel"
+              style="opacity: 0.8; margin-bottom: 10px"
+            >
+              Englisch
+            </p>
+            <div class="flashcard-text" id="flashcardBackText">hello</div>
           </div>
         </div>
         <div class="flashcard-controls">
