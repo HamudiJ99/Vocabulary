@@ -154,6 +154,15 @@
         </div>
       </div>
 
+      <!-- Focus Mode Toggle -->
+      <button
+        class="focus-mode-btn"
+        id="focusModeBtn"
+        onclick="toggleFocusMode()"
+      >
+        🎯 Fokus-Modus
+      </button>
+
       <!-- Main Flashcard Area -->
       <div id="flashcardMain">
         <p class="flashcard-info">
@@ -171,6 +180,7 @@
               Arabisch
             </p>
             <div class="flashcard-arabic" id="flashcardFrontText">مرحباً</div>
+            <p class="flashcard-pronunciation" id="flashcardPronunciation"></p>
             <p style="opacity: 0.5; margin-top: 20px">Klicken zum Umdrehen</p>
           </div>
           <div class="flashcard-back">
@@ -181,8 +191,13 @@
               Englisch
             </p>
             <div class="flashcard-text" id="flashcardBackText">hello</div>
+            <p
+              class="flashcard-pronunciation"
+              id="flashcardBackPronunciation"
+            ></p>
           </div>
         </div>
+        <p class="swipe-hint" id="swipeHint">👈 Wusste nicht | Wusste ich 👉</p>
         <div class="flashcard-controls">
           <button class="flashcard-btn dontknow" onclick="nextFlashcard(false)">
             ❌ Wusste ich nicht

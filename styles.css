@@ -1390,3 +1390,146 @@ header .subtitle {
     font-size: 0.85rem;
   }
 }
+
+/* ================== FOCUS MODE ================== */
+.focus-mode-btn {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  margin-bottom: 15px;
+}
+
+.focus-mode-btn:hover {
+  background: var(--gold);
+  color: var(--primary);
+}
+
+.focus-mode-btn.active {
+  background: var(--gold);
+  color: var(--primary);
+}
+
+/* Focus mode active state - hide non-essential elements */
+body.focus-mode header,
+body.focus-mode .controls,
+body.focus-mode .learning-progress,
+body.focus-mode .flashcard-filters {
+  display: none !important;
+}
+
+body.focus-mode .flashcard-container {
+  max-width: 100%;
+  padding: 15px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+body.focus-mode .flashcard-container.active {
+  display: flex;
+}
+
+body.focus-mode #flashcardMain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+body.focus-mode .flashcard {
+  height: 300px;
+  max-width: 450px;
+  width: 100%;
+}
+
+body.focus-mode .flashcard-controls {
+  width: 100%;
+  max-width: 450px;
+}
+
+body.focus-mode .focus-mode-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: auto;
+  z-index: 1000;
+  padding: 8px 15px;
+  font-size: 0.8rem;
+}
+
+/* ================== SWIPE SUPPORT ================== */
+.swipe-hint {
+  text-align: center;
+  opacity: 0.5;
+  font-size: 0.75rem;
+  margin-top: 15px;
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .swipe-hint {
+    display: block;
+  }
+}
+
+.flashcard.swiping-left {
+  transform: translateX(-50px) rotate(-5deg);
+  opacity: 0.7;
+}
+
+.flashcard.swiping-right {
+  transform: translateX(50px) rotate(5deg);
+  opacity: 0.7;
+}
+
+.flashcard.swiped-left {
+  animation: swipeOutLeft 0.3s ease forwards;
+}
+
+.flashcard.swiped-right {
+  animation: swipeOutRight 0.3s ease forwards;
+}
+
+@keyframes swipeOutLeft {
+  to {
+    transform: translateX(-150%) rotate(-15deg);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeOutRight {
+  to {
+    transform: translateX(150%) rotate(15deg);
+    opacity: 0;
+  }
+}
+
+/* ================== PRONUNCIATION ================== */
+.flashcard-pronunciation {
+  font-size: 1rem;
+  opacity: 0.7;
+  margin-top: 10px;
+  font-style: italic;
+  color: var(--text);
+}
+
+.flashcard-back .flashcard-pronunciation {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Overview pronunciation */
+.overview-pronunciation {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  font-style: italic;
+  grid-column: 2;
+}

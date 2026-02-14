@@ -513,6 +513,8 @@ function showFlashcard() {
       "No words available";
     const starsEl = document.getElementById("flashcardStars");
     if (starsEl) starsEl.textContent = "";
+    const pronEl = document.getElementById("flashcardPronunciation");
+    if (pronEl) pronEl.textContent = "";
     return;
   }
 
@@ -527,6 +529,10 @@ function showFlashcard() {
   const backText = document.getElementById("flashcardBackText");
   const frontLabel = document.getElementById("flashcardFrontLabel");
   const backLabel = document.getElementById("flashcardBackLabel");
+  const frontPronunciation = document.getElementById("flashcardPronunciation");
+  const backPronunciation = document.getElementById(
+    "flashcardBackPronunciation",
+  );
 
   if (flashcardState.reverseMode) {
     frontText.textContent = card.en;
@@ -535,6 +541,8 @@ function showFlashcard() {
     backText.className = "flashcard-arabic";
     if (frontLabel) frontLabel.textContent = "Englisch";
     if (backLabel) backLabel.textContent = "Arabisch";
+    if (frontPronunciation) frontPronunciation.textContent = "";
+    if (backPronunciation) backPronunciation.textContent = card.tr || "";
   } else {
     frontText.textContent = card.ar;
     frontText.className = "flashcard-arabic";
@@ -542,6 +550,8 @@ function showFlashcard() {
     backText.className = "flashcard-text";
     if (frontLabel) frontLabel.textContent = "Arabisch";
     if (backLabel) backLabel.textContent = "Englisch";
+    if (frontPronunciation) frontPronunciation.textContent = card.tr || "";
+    if (backPronunciation) backPronunciation.textContent = "";
   }
 
   document.getElementById("flashcard").classList.remove("flipped");
@@ -605,6 +615,10 @@ document.getElementById("wordModal")?.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     closeModal();
+    // Exit focus mode on Escape
+    if (document.body.classList.contains("focus-mode")) {
+      toggleFocusMode();
+    }
   }
   // Flashcard keyboard shortcuts
   if (document.getElementById("flashcardView").classList.contains("active")) {
@@ -617,4 +631,108 @@ document.addEventListener("keydown", (e) => {
       nextFlashcard(false);
     }
   }
+});
+
+// ================== FOCUS MODE ==================
+let focusModeActive = false;
+
+function toggleFocusMode() {
+  focusModeActive = !focusModeActive;
+  document.body.classList.toggle("focus-mode", focusModeActive);
+
+  const btn = document.getElementById("focusModeBtn");
+  if (btn) {
+    btn.textContent = focusModeActive ? "✕ Fokus beenden" : "🎯 Fokus-Modus";
+    btn.classList.toggle("active", focusModeActive);
+  }
+}
+
+// ================== SWIPE GESTURES ==================
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+let isSwiping = false;
+
+function initSwipeGestures() {
+  const flashcard = document.getElementById("flashcard");
+  if (!flashcard) return;
+
+  flashcard.addEventListener("touchstart", handleTouchStart, { passive: true });
+  flashcard.addEventListener("touchmove", handleTouchMove, { passive: false });
+  flashcard.addEventListener("touchend", handleTouchEnd, { passive: true });
+}
+
+function handleTouchStart(e) {
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+  isSwiping = false;
+}
+
+function handleTouchMove(e) {
+  if (!touchStartX) return;
+
+  const currentX = e.changedTouches[0].screenX;
+  const currentY = e.changedTouches[0].screenY;
+  const diffX = currentX - touchStartX;
+  const diffY = currentY - touchStartY;
+
+  // Only swipe if horizontal movement is greater than vertical
+  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 30) {
+    isSwiping = true;
+    e.preventDefault();
+
+    const flashcard = document.getElementById("flashcard");
+    flashcard.classList.remove("swiping-left", "swiping-right");
+
+    if (diffX > 0) {
+      flashcard.classList.add("swiping-right");
+    } else {
+      flashcard.classList.add("swiping-left");
+    }
+  }
+}
+
+function handleTouchEnd(e) {
+  const flashcard = document.getElementById("flashcard");
+  flashcard.classList.remove("swiping-left", "swiping-right");
+
+  if (!isSwiping) {
+    touchStartX = 0;
+    touchStartY = 0;
+    return;
+  }
+
+  touchEndX = e.changedTouches[0].screenX;
+  touchEndY = e.changedTouches[0].screenY;
+
+  const diffX = touchEndX - touchStartX;
+  const minSwipeDistance = 80;
+
+  if (Math.abs(diffX) > minSwipeDistance) {
+    if (diffX > 0) {
+      // Swipe right = knew it
+      flashcard.classList.add("swiped-right");
+      setTimeout(() => {
+        flashcard.classList.remove("swiped-right");
+        nextFlashcard(true);
+      }, 250);
+    } else {
+      // Swipe left = didn't know it
+      flashcard.classList.add("swiped-left");
+      setTimeout(() => {
+        flashcard.classList.remove("swiped-left");
+        nextFlashcard(false);
+      }, 250);
+    }
+  }
+
+  touchStartX = 0;
+  touchStartY = 0;
+  isSwiping = false;
+}
+
+// Initialize swipe gestures when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  initSwipeGestures();
 });
